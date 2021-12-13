@@ -1,0 +1,32 @@
+La aceasta tema am rezolvat doar primele 3 task-uri: rotp, ages si columnar.
+La primul task, rotp, programul foloseste instructiunea loop, dupa care in
+interiorul loop-ului modifica registrul ecx astfel incat sa ia valori
+crescatoare incepand cu 0, dupa care il modifica inapoi inainte de terminarea
+iteratiei in valoarea initiala. O alta parte dificila a problemei a fost
+constituita de punerea la locul potrivit in vectorul ciphertext a rezultatului
+operatiei xor; acest lucru se face la linia 46 cu byte si registrul al, lucrand
+doar cu un octet.
+Al doilea task, ages, se foloseste de un algoritm clasic pentru a determina
+"distanta" dintre doua date calendaristice - in cazul in care valoarea zilei
+nasterii e mai mare ca valoarea zilei curente, scade o unitate din valoarea
+lunii din prezent. Pentru o comparatie asemanatoare la nivelul lunilor, scade
+o unitate din valoarea anului din prezent. Dupa acestea, varsta reprezinta
+diferenta dintre anul prezent si anul nasterii. Inainte de aceasta parte, insa,
+in program se gaseste o sectiune care determina, mai intai, daca data nasterii
+nu este dupa data din prezent. Aceasta compara mai intai valorile anilor, apoi
+valorile lunilor si in cele din urma valorile zilelor, sarind convenabil la
+finalul iteratiei atunci cand data nasterii este "in viitor".
+Pentru al treilea task, columnar, programul functioneaza asemanator cu un
+program cu doua instructiuni "for" din C. Primul "for", identificat in cod prin
+label-ul fiecareColoana, itereaza prin vectorul key pentru a aplica al doilea
+"for" in ordinea corecta a coloanelor. Odata ce este identificata coloana cu
+care lucram, a doua bucla "fiecareElement" citeste din haystack toate elementele
+de pe coloana respectiva si le scrie in ciphertext. Important aici a fost
+contorul pentru ciphertext, care tine minte la ce pozitie in ciphertext a fost
+scris ultima oara si incrementeaza de fiecare data, pentru a scrie in
+continuare. In lipsa de registri, am mutat valoarea acestui contor pe rand,
+intre ebx si edi, mutandu-l in edi de fiecare data cand urma sa fie folosit ebx
+si viceversa.
+Consider ca aceasta tema a fost destul de dificila, dar a fost foarte utila si
+m-a ajutat sa inteleg mult mai bine conceptele pe care le-am invatat la curs si
+la laborator legate de cum functioneaza limbajul de asamblare.

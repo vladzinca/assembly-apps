@@ -1,9 +1,5 @@
-%include "io.mac"
-;; de sters
-
 section .text
     global rotp
-    extern printf ;; de sters
 
 ;; void rotp(char *ciphertext, char *plaintext, char *key, int len);
 rotp:
@@ -19,37 +15,42 @@ rotp:
     ;; DO NOT MODIFY
 
     ;; TODO: Implment rotp
-    ;; FREESTYLE STARTS HERE
-    mov     edx, ecx        ; salveaza lungimea in edx
-label:
-    ; PRINTF32 `%d\n\x0`, ecx
+    ;; FREESTYLsE STARTS HERE
+    ;; salveaza len in edx
+    mov     edx, ecx
+fiecareElement:
+    ;; prelucreaza ecx ca sa itereze 0, 1, ..., (len - 1)
     neg     ecx
-    add     ecx, edx        ; pune pe rand in ecx "i = " 0, 1, ... pana la len - 1
-    lea     eax, [esi + ecx]    ; copiaza in eax tot plaintext-ul de la plaintext[i]
+    add     ecx, edx
+    ;; copiaza in eax tot plaintext-ul incepand cu elementul plaintext[i]
+    lea     eax, [esi + ecx]
+    ;; copiaza in eax doar plaintext[i]
+    mov     al, byte [eax]
+    ;; reface in ecx valoarea necesara iteratiei cu loop (len - 1), 19, ..., 1
     sub     ecx, edx
-    neg     ecx             ; reface ecx in valoarea iteratiei 20, 19, ... pana la 1
-    ; PRINTF32 `%s\n\x0`, eax
-    mov     al,  byte [eax] ; copiaza in eax doar plaintext[i]
-    ; PRINTF32 `%c\n\x0`, eax
-    ; neg     ecx
-    lea     ebx, [edi + ecx - 1] ; copiaza in ebx tot key-ul de la key[len - i - 1]
-    ; neg     ecx
-    mov     bl,  byte [ebx] ; copiaza in ebx doar key[len - i - 1]
-    ; PRINTF32 `%c si %c\n\x0`, eax, ebx
-    xor     al, bl ; face operatia xor intre plaintext[ecx] si key[len-i-1] si salveaza rezultatul in eax
-    mov     ebx, edx ; acum ca ebx e gol si o sa se ocupe edx-ul, pune in ebx lungimea
-    mov     edx, [ebp + 8] ; muta edx unde trebuie sa scrie ciphertext[i]
     neg     ecx
-    ; add     ecx, 20
-    add     ecx, ebx ; face ecx "i = " 0, 1, ... pana la len - 1
-    ; PRINTF32 `ecx: %d\n\x0`, ecx
-    mov     byte [edx + ecx], al ; pune in ciphertext[i] valoarea lui xor
-    ; sub     ecx, 20
+    ;; copiaza in ebx key[len - i - 1]
+    lea     ebx, [edi + ecx - 1]
+    mov     bl, byte [ebx]
+    ;; executa operatia xor intre plaintext[i] si key[len - i - 1] si salveaza
+    ;; rezultatul in eax
+    xor     al, bl
+    ;; acum ca la aceasta iteratie nu se mai foloseste ebx, dar se va folosi
+    ;; edx, muta len in ebx
+    mov     ebx, edx
+    mov     edx, [ebp + 8]
+    ;; prelucreaza ecx ca sa itereze 0, 1, ..., (len - 1)
+    neg     ecx
+    add     ecx, ebx
+    ;; copiaza in ciphertext[i] valoarea operatiei xor
+    mov     byte [edx + ecx], al
+    ;; reface in ecx valoarea necesara iteratiei cu loop (len - 1), 19, ..., 1
     sub     ecx, ebx
-    neg     ecx ; reface ecx in valoarea iteratiei 20, 19, ... pana la 1
-    mov     edx, ebx ; acum ca edx e gol si o sa se ocupe ebx-ul, pune in edx lungimea
-    loop    label
-
+    neg     ecx
+    ;; acum ca la inceputul urmatoarei iteratii nu se mai foloseste edx, dar se
+    ;; va folosi ebx, muta len in edx
+    mov     edx, ebx
+    loop    fiecareElement
     ;; FREESTYLE ENDS HERE
     ;; DO NOT MODIFY
     popa
